@@ -138,18 +138,18 @@ describe('DELETE /todos/:id', () => {
             })
     })
 
-    // it('should return 404 if todo not found', (done) => {
-    //     const hexId = new ObjectID().toHexString();
-    //     request(app)
-    //         .delete(`/todos/${hexId}`)
-    //         .expect(404)
-    //         .end(done)
-    // })
+    it('should return 404 if todo not found', (done) => {
+        const hexId = new ObjectID().toHexString();
+        request(app)
+            .delete(`/todos/${hexId}`)
+            .expect(404)
+            .end(done)
+    })
 
-    // it('should return 404 for non-object ids', (done) => {
-    //     request(app)
-    //         .get('/todos/123')
-    //         .expect(404)
-    //         .end(done)
-    // })
+    it('should return 404 for non-object ids', (done) => {
+        request(app)
+            .delete('/todos/123')
+            .expect(404)
+            .end(done)
+    })
 })
