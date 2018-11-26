@@ -247,7 +247,7 @@ describe('POST /users', () => {
 });
 
 describe('POST /users/login', () => {
-    it('should return auth token', (done) => {
+    it('should return auth token', done => {
         const email = users[1].email;
         const password = users[1].password;
 
@@ -267,7 +267,7 @@ describe('POST /users/login', () => {
                     .then(user => {
                         expect(user.tokens[0]).toInclude({
                             access: 'auth',
-                            token: res.headers['x-auth']
+                            token: res.headers['x-auth'],
                         });
                         done();
                     })
@@ -299,4 +299,25 @@ describe('POST /users/login', () => {
                     .catch(err => done(err));
             });
     });
-})
+});
+
+describe('DELETE /users/me/token', () => {
+    it('should remove auth token on logout', done => {
+        request(app)
+            .delete('/users/me/token')
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+
+                User.findById(users[0]._id)
+                    .then(user => {
+                        expect(user.tokens.length).toBe(0);
+                        done();
+                    })
+                    .catch(err => done(err));
+            });
+    });
+});
